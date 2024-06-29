@@ -10,6 +10,22 @@ python = "^3.12"
 djangorestframework = "^3.15.2"
 
 
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.2.5"
+black = "^24.4.2"
+isort = "^5.13.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ["py312"]
+
+[tool.pylint.config_files]
+rcfile = ".pylintrc"
+
+[tool.isort]
+profile = "black"
+known_first_party = ["v1"]
