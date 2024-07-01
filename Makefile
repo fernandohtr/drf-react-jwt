@@ -11,5 +11,3 @@ style: .style-front .style-back
 
 .up-back:
 	./backend/manage.py runserver
-
-up: .up-front .up-back
