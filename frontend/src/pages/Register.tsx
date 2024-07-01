@@ -5,7 +5,7 @@ interface IUser {
   email: string;
   password1: string;
   password2: string;
-};
+}
 
 export default function Register() {
   const [formData, setFormData] = useState<IUser>({
@@ -17,12 +17,15 @@ export default function Register() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-  };
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -40,16 +43,37 @@ export default function Register() {
           "Content-Type": "application/json",
         },
       });
-      console.log("Success!", response.json());
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error during registration!", errorData);
+
+        Object.keys(errorData).forEach((field) => {
+          const errorMessages = errorData[field];
+          if (errorMessages && errorMessages.length > 0) {
+            setErrorMessage(errorMessages[0]);
+            setSuccessMessage(null);
+          }
+        });
+      } else {
+        const data = await response.json();
+        console.log("Success!", data);
+        setSuccessMessage("Registration Successful!");
+        setErrorMessage(null);
+      }
     } catch (error) {
       console.error("Error during registration!", error);
+      setErrorMessage("An unexpected error occurred during registration.");
+      setSuccessMessage(null);
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   return (
     <>
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+      {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">username:</label>
@@ -98,4 +122,4 @@ export default function Register() {
       </form>
     </>
   );
-};
+}
