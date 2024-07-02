@@ -69,35 +69,33 @@ export default function Login() {
   }
 
   return (
-    <>
+    <section>
+      <h1>Login</h1>
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
       {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">email:</label>
-        <br />
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <br />
-        <label htmlFor="password">password:</label>
-        <br />
-        <input
-          type="password"
-          name="password"
-          id="password"
-          value={formData.password}
-          onChange={handleChange}
-        />
-        <br />
-        <button type="submit" disabled={isLoading}>
-          Login
-        </button>
-      </form>
-    </>
+      <div className="credentials">
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="email">email:</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <label htmlFor="password">password:</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <button type="submit" disabled={isLoading}>
+            Login
+          </button>
+        </form>
+      </div>
+    </section>
   );
 }
