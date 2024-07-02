@@ -38,11 +38,36 @@ export default function Home() {
     checkLoggedInUser();
   }, []);
 
+  async function handleLogout() {
+    const token = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+    const response = await fetch("http://127.0.0.1:8000/api/logout/", {
+      method: "POST",
+      body: JSON.stringify({ refresh: refreshToken }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setIsLoggedIn(false);
+      setUsername("");
+    } else {
+      console.error("Failed to Logout!");
+    }
+  }
+
   return (
     <>
       <h1>Home</h1>
       {isLoggedIn ? (
-        <h2>Hi, {username}. Thanks for loggin in!</h2>
+        <>
+          <h2>Hi, {username}. Thanks for loggin in!</h2>
+          <button onClick={handleLogout}>Logout</button>
+        </>
       ) : (
         <h2>Please Login</h2>
       )}
