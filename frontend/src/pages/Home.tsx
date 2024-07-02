@@ -1,44 +1,43 @@
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [username, setUsername] = useState("")
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [username, setUsername] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     async function checkLoggedInUser() {
       try {
-        const token = localStorage.getItem("accessToken")
-        if(token) {
-          const config = {
+        const token = localStorage.getItem("accessToken");
+
+        if (token) {
+          const response = await fetch("http://127.0.0.1:8000/api/user/", {
+            method: "GET",
             headers: {
-              "Authorization": `Bearer $(token)`
-            }
-          };
-          const response = await fetch("http://127.0.0.1:8000/api/register/", {
-            method: "POST",
-            body: JSON.stringify(config),
-            headers: {
-              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
           });
-          const data = await response.json();
-          setIsLoggedIn(true);
-          setUsername(data.username);
+
+          if (!response.ok) {
+            setIsLoggedIn(false);
+            setUsername("");
+          } else {
+            const data = await response.json();
+            setIsLoggedIn(true);
+            setUsername(data.username);
+          }
         } else {
           setIsLoggedIn(false);
           setUsername("");
         }
-      } catch(error) {
+      } catch (error) {
         setIsLoggedIn(false);
         setUsername("");
       }
     }
-    console.log(username);
-    console.log(isLoggedIn);
-    
+
     checkLoggedInUser();
-  }, [])
-  
+  }, []);
+
   return (
     <>
       <h1>Home</h1>
@@ -48,5 +47,5 @@ export default function Home() {
         <h2>Please Login</h2>
       )}
     </>
-  )
+  );
 }
